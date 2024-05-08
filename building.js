@@ -24,6 +24,7 @@ var Elevator = /** @class */ (function () {
                 _this.ding.play();
                 setTimeout(function () {
                     _this.ding.pause();
+                    _this.ding.currentTime = 0;
                     freeFloor(destination);
                 }, settings.timeInFloor);
             }, gap * 0.5 * 1000);
@@ -60,6 +61,7 @@ var Floor = /** @class */ (function () {
             if (!_this.isInActive) {
                 orderElevator(_this.floorNumber);
                 _this.isInActive = true;
+                _this.button.style.color = "green";
             }
         };
         this.floorElement.appendChild(this.button);
@@ -71,8 +73,6 @@ var Floor = /** @class */ (function () {
 var Building = /** @class */ (function () {
     function Building(num_of_floors, num_of_elevators) {
         var _this = this;
-        this.num_of_floors = num_of_floors;
-        this.num_of_elevators = num_of_elevators;
         this.floors = [];
         this.elevators = [];
         this.buildingElement = document.createElement("div");
@@ -80,6 +80,7 @@ var Building = /** @class */ (function () {
         this.elevatorShaft = document.createElement("div");
         this.freeFloor = function (floorNumber) {
             _this.floors[floorNumber].isInActive = false;
+            _this.floors[floorNumber].button.style.color = "hsla(0,0%,20%,1)";
         };
         this.chooseElevator = function (floorNumber, currentTime) {
             var minTime = Infinity;

@@ -42,6 +42,7 @@ class Elevator {
             this.ding.play();
             setTimeout(() => {
                 this.ding.pause();
+                this.ding.currentTime = 0;
                 freeFloor(destination);
                 }, settings.timeInFloor
             )}, gap * 0.5 * 1000
@@ -72,6 +73,7 @@ class Floor {
             if (!this.isInActive) {
                 orderElevator(this.floorNumber)
                 this.isInActive = true;
+                this.button.style.color = "green"
             }
         };
         this.floorElement.appendChild(this.button);
@@ -120,6 +122,8 @@ class Building {
 
     freeFloor = (floorNumber: number) => {
         this.floors[floorNumber].isInActive = false;
+        this.floors[floorNumber].button.style.color = "hsla(0,0%,20%,1)";
+
     }
 
     chooseElevator = (floorNumber: number, currentTime: number) => {
