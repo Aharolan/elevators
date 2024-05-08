@@ -1,3 +1,12 @@
+var Settings = /** @class */ (function () {
+    function Settings() {
+        this.num_of_buildings = 3;
+        this.num_of_elevators = 3;
+        this.num_of_floors = 15;
+        this.timeInFloor = 2000;
+    }
+    return Settings;
+}());
 var Elevator = /** @class */ (function () {
     function Elevator(id) {
         var _this = this;
@@ -60,36 +69,36 @@ var Floor = /** @class */ (function () {
     return Floor;
 }());
 var Building = /** @class */ (function () {
-    function Building(num_of_elevators, num_of_floors) {
+    function Building(num_of_floors, num_of_elevators) {
         var _this = this;
-        this.num_of_elevators = num_of_elevators;
         this.num_of_floors = num_of_floors;
+        this.num_of_elevators = num_of_elevators;
         this.floors = [];
         this.elevators = [];
         this.buildingElement = document.createElement("div");
         this.floorsElement = document.createElement("div");
         this.elevatorShaft = document.createElement("div");
         this.freeFloor = function (floorNumber) {
-            console.log("Message:freeFloor " + floorNumber);
             _this.floors[floorNumber].isInActive = false;
         };
-        this.chooseElevetor = function (floorNumber) {
-        };
-        this.orderElevator = function (floorNumber) {
-            var currentTime = Date.now();
+        this.chooseElevator = function (floorNumber, currentTime) {
             var minTime = Infinity;
             var elevatorID = 0;
             for (var _i = 0, _a = _this.elevators; _i < _a.length; _i++) {
-                var elevator_1 = _a[_i];
-                var currentMin = Math.abs(elevator_1.destination - floorNumber) * 500
+                var elevator = _a[_i];
+                var currentMin = Math.abs(elevator.destination - floorNumber) * 500
                     + settings.timeInFloor
-                    + (currentTime > elevator_1.timer ? 0 : elevator_1.timer - currentTime);
+                    + (currentTime > elevator.timer ? 0 : elevator.timer - currentTime);
                 if (currentMin < minTime) {
                     minTime = currentMin;
-                    elevatorID = elevator_1.id;
+                    elevatorID = elevator.id;
                 }
             }
-            var selectedElevator = _this.elevators[elevatorID];
+            return _this.elevators[elevatorID];
+        };
+        this.orderElevator = function (floorNumber) {
+            var currentTime = Date.now();
+            var selectedElevator = _this.chooseElevator(floorNumber, currentTime);
             var gap = Math.abs(selectedElevator.destination - floorNumber);
             selectedElevator.destination = floorNumber;
             if (currentTime > selectedElevator.timer) { // the elevator is resting
@@ -108,36 +117,36 @@ var Building = /** @class */ (function () {
         this.floorsElement.className = "floors";
         // creates elevators
         for (var i = 0; i < num_of_elevators; i++) {
-            var elevator_2 = new Elevator(i);
-            this.elevators.push(elevator_2);
-            this.elevatorShaft.appendChild(elevator_2.img);
+            var elevator = new Elevator(i);
+            this.elevators.push(elevator);
+            this.elevatorShaft.appendChild(elevator.img);
         }
         // creates floors
         for (var i = 0; i <= num_of_floors; i++) {
             var floor = new Floor(i, this.orderElevator);
             this.floors.push(floor);
             this.floorsElement.appendChild(floor.floorElement);
-            if (i != 0) {
+            if (i != num_of_floors) {
                 this.floorsElement.appendChild(floor.lineElement);
             }
             this.floorsElement.className = 'floors';
         }
-        // this.buildingElement.appendChild(this.floorsElement);
-        // this.buildingElement.appendChild(this.elevatorShaft);
         var building = document.getElementById("building");
         building.appendChild(this.floorsElement);
         building.appendChild(this.elevatorShaft);
     }
     return Building;
 }());
-var Settings = /** @class */ (function () {
-    function Settings() {
-        this.num_of_elevators = 3;
-        this.timeInFloor = 2000;
+var BuildingFactory = /** @class */ (function () {
+    function BuildingFactory() {
     }
-    return Settings;
+    BuildingFactory.getBuilding = function (num_of_floors, num_of_elevators) {
+        return new Building(num_of_floors, num_of_elevators);
+    };
+    return BuildingFactory;
 }());
 var settings = new Settings();
-var building = new Building(settings.num_of_elevators, 15);
-var elevator = document.getElementById("elevator1");
-// elevator.style.transform = `translateY(-220px)`;
+// const buildingFactory: BuildingFactory = new BuildingFactory;
+var building1 = BuildingFactory.getBuilding(settings.num_of_floors, settings.num_of_elevators);
+var building2 = BuildingFactory.getBuilding(4, 1);
+var building3 = BuildingFactory.getBuilding(8, 2);

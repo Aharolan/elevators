@@ -1,4 +1,11 @@
 
+class Settings {
+    num_of_buildings: number = 3
+    num_of_elevators: number = 3;
+    num_of_floors: number = 15;
+    timeInFloor: number = 2000;
+}
+
 class Elevator {
     id: number;
     img: HTMLImageElement = document.createElement('img');
@@ -77,7 +84,7 @@ class Floor {
 
 class Building {
 
-    constructor(public num_of_elevators: number, public num_of_floors: number) {
+    constructor(num_of_floors: number, num_of_elevators: number) {
         this.buildingElement.className = "building";
         this.elevatorShaft.className = "elevatorShaft";
         this.floorsElement.className = "floors";
@@ -94,7 +101,7 @@ class Building {
             const floor: Floor = new Floor(i, this.orderElevator);
             this.floors.push(floor);
             this.floorsElement.appendChild(floor.floorElement);
-            if (i != 0) {
+            if (i != num_of_floors) {
                 this.floorsElement.appendChild(floor.lineElement);
             }
             this.floorsElement.className = 'floors';
@@ -152,14 +159,15 @@ class Building {
     }
 }
 
-class Settings {
-    num_of_elevators: number = 3;
-    num_of_floors: number = 15;
-    timeInFloor: number = 2000;
+class BuildingFactory {
+    static getBuilding(num_of_floors: number, num_of_elevators: number): Building {
+        return new Building(num_of_floors, num_of_elevators);
+    }
 }
 
+
 const settings: Settings = new Settings();
-
-const building : Building = new Building(settings.num_of_elevators, settings.num_of_floors);
-
-
+// const buildingFactory: BuildingFactory = new BuildingFactory;
+const building1 : Building =  BuildingFactory.getBuilding(settings.num_of_floors, settings.num_of_elevators);
+const building2 : Building =  BuildingFactory.getBuilding(4, 1);
+const building3 : Building =  BuildingFactory.getBuilding(8, 2);
