@@ -148,6 +148,9 @@
 .content {
     /*width: 100vh;*/
     /*height: 97vh;*/
+    /*position: fixed;*/
+    overflow: visible;
+    bottom: 0;
     display: flex;
     align-items: flex-end;
     flex-direction: row;
@@ -168,4 +171,14 @@
     display: block; !important;
     border-radius: 17px;
     text-align: center;
+}
+
+.counter {
+    width: 25px;
+    height: 25px;
+    color: #3e1e8d;
+    border-radius: 7px;
+    border: 1px  solid ;
+    font-size: 28px;
+    font-family: bold, sans-serif;
 }

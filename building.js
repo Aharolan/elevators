@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var floor_1 = require("./floor");
 var Settings = /** @class */ (function () {
     function Settings() {
         this.num_of_buildings = 3;
@@ -33,42 +36,14 @@ var Elevator = /** @class */ (function () {
         this.ding.src = "./ding.mp3";
         this.ding.controls = true;
         this.ding.volume = 0.3;
-        this.img.onclick = function () {
-            _this.img.style.transform = "translateY(".concat(-200, "px)");
-        };
         this.img.id = "elevator" + id.toString();
         this.id = id;
         this.img.classList.add("elevator");
+        this.img.onclick = function () {
+            _this.img.style.transform = "translateY(".concat(-200, "px)");
+        };
     }
     return Elevator;
-}());
-var Floor = /** @class */ (function () {
-    function Floor(floorNumber, orderElevator) {
-        var _this = this;
-        this.isInActive = false;
-        this.button = document.createElement("button");
-        this.floorElement = document.createElement("div");
-        this.lineElement = document.createElement("div");
-        this.lineElement.className = "blackLine";
-        this.floorElement.classList.add("floor");
-        //TODO: what is classList.add;
-        // this.button.classList.add('metal.linear');
-        this.button.className = "metal linear";
-        this.floorNumber = floorNumber;
-        this.button.textContent = this.floorNumber.toString();
-        this.button.id = floorNumber.toString();
-        this.button.onclick = function () {
-            if (!_this.isInActive) {
-                orderElevator(_this.floorNumber);
-                _this.isInActive = true;
-                _this.button.style.color = "green";
-            }
-        };
-        this.floorElement.appendChild(this.button);
-        this.floorElement.id = floorNumber.toString();
-        console.log();
-    }
-    return Floor;
 }());
 var Building = /** @class */ (function () {
     function Building(num_of_floors, num_of_elevators) {
@@ -105,12 +80,17 @@ var Building = /** @class */ (function () {
             if (currentTime > selectedElevator.timer) { // the elevator is resting
                 selectedElevator.move(floorNumber, _this.freeFloor);
                 selectedElevator.timer = currentTime + (gap * 0.5 + 2) * 1000;
+                _this.floors[floorNumber].startCounter(gap * 0.5);
             }
             else {
                 setTimeout(function () {
                     selectedElevator.move(floorNumber, _this.freeFloor);
                 }, selectedElevator.timer - currentTime);
                 selectedElevator.timer += (gap * 0.5 + 2) * 1000;
+                console.log("Message: travel " + (gap * 0.5));
+                console.log("Message: add " + (selectedElevator.timer - currentTime) / 1000);
+                console.log("Message: full calaulate " + (gap * 0.5 + (selectedElevator.timer - currentTime) / 1000));
+                _this.floors[floorNumber].startCounter(gap * 0.5 + (selectedElevator.timer - currentTime) / 1000);
             }
         };
         this.buildingElement.className = "building";
@@ -124,7 +104,7 @@ var Building = /** @class */ (function () {
         }
         // creates floors
         for (var i = 0; i <= num_of_floors; i++) {
-            var floor = new Floor(i, this.orderElevator);
+            var floor = new floor_1.Floor(i, this.orderElevator);
             this.floors.push(floor);
             this.floorsElement.appendChild(floor.floorElement);
             if (i != num_of_floors) {
@@ -133,8 +113,10 @@ var Building = /** @class */ (function () {
             this.floorsElement.className = 'floors';
         }
         var building = document.getElementById("building");
-        building.appendChild(this.floorsElement);
-        building.appendChild(this.elevatorShaft);
+        if (building) {
+            building.appendChild(this.floorsElement);
+            building.appendChild(this.elevatorShaft);
+        }
     }
     return Building;
 }());
@@ -147,7 +129,6 @@ var BuildingFactory = /** @class */ (function () {
     return BuildingFactory;
 }());
 var settings = new Settings();
-// const buildingFactory: BuildingFactory = new BuildingFactory;
 var building1 = BuildingFactory.getBuilding(settings.num_of_floors, settings.num_of_elevators);
 var building2 = BuildingFactory.getBuilding(4, 1);
 var building3 = BuildingFactory.getBuilding(8, 2);
