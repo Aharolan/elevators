@@ -9,8 +9,8 @@ export class Elevator {
     timer: number = 0;
 
     constructor(id: number) {
-        this.img.src = "./elv.png";
-        this.ding.src = "./ding.mp3";
+        this.img.src = "../assets/elv.png";
+        this.ding.src = "../assets/ding.mp3";
         this.ding.controls = true;
         this.ding.volume = 0.3
         this.img.id = "elevator" + id.toString();
@@ -21,24 +21,30 @@ export class Elevator {
         }
     }
 
+    playDingSound = (flag: boolean): void => {
+        if (flag) {
+            this.ding.play();
+        } else {
+            this.ding.pause();
+            this.ding.currentTime = 0;
+        }
+    }
     move = (destination: number, freeFloor: (floorNumber: number) => void): void => {
 
         let gap: number = Math.abs(this.currentFloor - destination);
 
-        this.img.style.transition = `transform ${gap * 0.5}s ease`
         this.img.style.transform = `translateY(${-destination * 110}px)`
+        this.img.style.transition = `transform ${gap * 0.5}s ease`
         this.currentFloor = destination;
 
-        setTimeout(() => {
-            this.ding.play();
-            setTimeout(() => {
-                    this.ding.pause();
-                    this.ding.currentTime = 0;
+        setTimeout((): void => {
+            this.playDingSound(true);
+            setTimeout((): void => {
+                    this.playDingSound(false);
                     freeFloor(destination);
                 }, Settings.timeInFloor
             )
-        }, gap * 0.5 * 1000
-        )
+        }, gap * 0.5 * 1000)
     }
 
 }

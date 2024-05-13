@@ -8,8 +8,8 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "building.ts",
-    "floor.ts"
+    "src/building.ts",
+    "src/floor.ts"
   ],
   "exclude": [
     "node_modules",

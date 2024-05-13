@@ -19,35 +19,39 @@ export class Floor {
         this.floorElement.appendChild(this.button);
         this.floorElement.appendChild(this.counterElement);
         this.floorElement.id = floorNumber.toString();
-        this.button.onclick = () => {
+        this.button.onclick = (): void => {
             if (!this.isInActive) {
-                orderElevator(this.floorNumber)
+                orderElevator(this.floorNumber);
                 this.isInActive = true;
                 this.button.style.color = "green";
-                // this.startCounter(5);
             }
         };
     }
 
-    startCounter(counter: number) {
-        let timeOut = counter % 1;
-        setTimeout(() => {
-            let num = Math.floor(counter); // Set initial value
-            //TODO: validate not updated to zero
+    startCounter(counter: number): void {
+        const timeOut: number = counter % 1;
+        console.log("timeOut " + timeOut)
+        setTimeout((): void => {
+            let num: number = Math.floor(counter); // Set initial value
+            //  TODO: validate not updated to zero
             this.updateCounter(num);
 
-            const interval = setInterval(() => {
+            const interval = setInterval((): void => {
                 num--;
                 this.updateCounter(num);
-                if (num <= 0) {
+
+                if (num < 0) {
                     clearInterval(interval);
-                    this.counterElement.textContent = null;
+                    this.counterElement.style.background = 'transparent';
+                    this.counterElement.textContent = '';
                 }
             }, 1000);
         }, timeOut);
+
     }
 
-    updateCounter(num: number) {
+    updateCounter(num: number): void {
+        this.counterElement.style.background = '#23b20d';
         this.counterElement.textContent = num.toString();
     }
 }
