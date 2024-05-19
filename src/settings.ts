@@ -3,4 +3,6 @@ export class Settings {
     static numOfElevators: number = 3;
     static numOfFloors: number = 15;
     static timeInFloor: number = 2000;
+    static timeBetweenFloors: number = 0.5;
+    static millisecond: number = 1000;
 }

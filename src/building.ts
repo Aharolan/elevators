@@ -61,9 +61,9 @@ class Building {
         for (let elevator of this.elevators) {
 
             const currentMin: number =
-                Math.abs(elevator.destination - floorNumber) * 0.5
+                Math.abs(elevator.destination - floorNumber) * Settings.timeBetweenFloors
                 + (currentTime > elevator.timer // the elevator is resting
-                    ? 0 : (elevator.timer - currentTime) / 1000);
+                    ? 0 : (elevator.timer - currentTime) / Settings.millisecond);
 
             if (currentMin < minTime) {
                 minTime = currentMin;
@@ -75,16 +75,16 @@ class Building {
 
     handleImmediateElevatorOrder = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
         elevator.move(floorNumber, this.freeFloor);
-        elevator.timer = currentTime + (gap * 0.5 + 2) * 1000;
-        this.floors[floorNumber].startCounter(gap * 0.5);
+        elevator.timer = currentTime + Settings.timeInFloor + (gap * Settings.timeBetweenFloors) * Settings.millisecond;
+        this.floors[floorNumber].startCounter(gap * Settings.timeBetweenFloors);
     }
 
     handleElevatorOrderInAWhile = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
         setTimeout((): void => { // the elevator is working
             elevator.move(floorNumber, this.freeFloor)
         }, elevator.timer - currentTime)
-        this.floors[floorNumber].startCounter(gap * 0.5 + (elevator.timer - currentTime) / 1000);
-        elevator.timer += (gap * 0.5 + 2) * 1000;
+        this.floors[floorNumber].startCounter(gap * Settings.timeBetweenFloors + (elevator.timer - currentTime) / Settings.millisecond);
+        elevator.timer += ((gap * Settings.timeBetweenFloors) * Settings.millisecond + Settings.timeInFloor);
     }
     orderElevator = (floorNumber: number): void => {
 
