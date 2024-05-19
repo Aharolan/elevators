@@ -30,7 +30,6 @@ export class Floor {
 
     startCounter(counter: number): void {
         const timeOut: number = counter % 1;
-        console.log("timeOut " + timeOut)
         setTimeout((): void => {
             let num: number = Math.floor(counter); // Set initial value
             //  TODO: validate not updated to zero

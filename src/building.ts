@@ -49,7 +49,6 @@ class Building {
         }
     }
 
-    //TODO: edit freeFloor function name
     freeFloor = (floorNumber: number): void => {
         this.floors[floorNumber].isInActive = false;
         this.floors[floorNumber].button.style.color = "hsla(0,0%,20%,1)";
@@ -74,13 +73,13 @@ class Building {
         return this.elevators[elevatorID];
     }
 
-    handleImmediateElevatorOrder = (elevator: Elevator, currentTime, floorNumber, gap: number): void => {
+    handleImmediateElevatorOrder = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
         elevator.move(floorNumber, this.freeFloor);
         elevator.timer = currentTime + (gap * 0.5 + 2) * 1000;
         this.floors[floorNumber].startCounter(gap * 0.5);
     }
 
-    handleElevatorOrderInAWhile = (elevator: Elevator, currentTime, floorNumber, gap: number): void => {
+    handleElevatorOrderInAWhile = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
         setTimeout((): void => { // the elevator is working
             elevator.move(floorNumber, this.freeFloor)
         }, elevator.timer - currentTime)
