@@ -1,7 +1,7 @@
 
 .floor {
     display: flex;
-    width: 300px;
+    width: 250px;
     height: 103px;
     justify-content: center;
     align-items: center;
@@ -75,6 +75,7 @@
     width: 100px;
     font-size: 4em;
     height: 80px;
+    left: 22px;
     border-radius: .5em;
     background-image: -webkit-repeating-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsla(0, 0%, 100%, 0) 6%, hsla(0, 0%, 100%, .1) 7.5%),
     -webkit-repeating-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, 0) 4%, hsla(0, 0%, 0%, .03) 4.5%),
@@ -105,24 +106,28 @@
 }
 
 .building {
+    height: min-content;
     display: flex;
+    align-items: flex-end;
     flex-direction: row;
+    min-height: 97vh;
+    bottom: 0;
 }
 
 .elevator {
-    /*position: absolute;*/
-    height: 103px;
-    width: auto;
+    border-style: solid;
+    border-width: 3px;
+    background-color: lightblue;
+    height: 96px;
+    width: 90px;
     top: 500px;
     transition: transform 2s ease;
-    /*transform: translateY(-50px);*/
 }
 
 .elevatorShaft {
     height: 100%;
     display: flex;
     flex-direction: row;
-    /*background-color: aquamarine;*/
     align-items: end;
     position: relative;
 }
@@ -130,27 +135,25 @@
 .floors {
     height: 100%;
     display: flex;
+    align-items: center;
     flex-direction: column-reverse;
-    /*justify-content: flex-end;*/
 }
 
 .content {
-    /*width: 100vh;*/
-    /*height: 97vh;*/
-    /*position: fixed;*/
-    min-height: 97vh;
-    overflow: visible;
-    bottom: 0;
     display: flex;
+    width: max-content;
     align-items: flex-end;
     flex-direction: row;
-    /*justify-content: flex-end;*/
-    /*align-self: flex-end;*/
-    background-color: gray;
+    min-height: 97vh;
+    min-width: 98vw;
+    bottom: 0;
+    background-image: url("../assets/pexels-neosiam-633520.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .blackLine {
-    width: 100%;
+    width: 250px;
     height: 7px;
     background-color: black;
 }
@@ -159,7 +162,6 @@
     width: 20%;
     height: 40%;
     display: block;
-!important;
     border-radius: 17px;
     text-align: center;
 }
@@ -168,12 +170,20 @@
     display: flex;
     position: relative;
     bottom: 5px;
-    right: 33px;
+    right: 5px;
     width: 40px;
     height: 40px;
     color: hsla(0, 0%, 20%, 1);
     border-radius: 7px;
     font-size: 40px;
+    font-family: 'Calculator', sans-serif;
+    font-weight: bold;
+    color: red;
     justify-content: center;
-    font-family: bold, sans-serif
+    align-items: center;
+}
+
+.roof {
+    width: 280px;
+    height: auto;
 }

@@ -9,16 +9,17 @@ export class Elevator {
     timer: number = 0;
 
     constructor(id: number) {
+        this.id = id;
+        this.initialElements();
+    }
+
+    initialElements(): void {
         this.img.src = "../assets/elv.png";
         this.ding.src = "../assets/ding.mp3";
         this.ding.controls = true;
         this.ding.volume = 0.3
-        this.img.id = "elevator" + id.toString();
-        this.id = id;
+        this.img.id = "elevator" + this.id.toString();
         this.img.classList.add("elevator");
-        this.img.onclick = (): void => {
-            this.img.style.transform = `translateY(${-200}px)`;
-        }
     }
 
     playDingSound = (flag: boolean): void => {

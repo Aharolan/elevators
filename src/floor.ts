@@ -8,17 +8,24 @@ export class Floor {
     counterElement: HTMLDivElement = document.createElement("div");
 
     constructor(floorNumber: number, orderElevator: (floorNumber: number) => void) {
+        this.floorNumber = floorNumber;
+        this.initialButton(orderElevator);
+        this.initialElements();
+    }
+
+    initialElements(): void {
         this.lineElement.className = "blackLine";
-        this.floorElement.classList.add("floor");
-        this.counterElement.classList.add("counter");
+        this.floorElement.className = "floor";
         this.button.className = "metal linear";
         this.counterElement.className = "counter";
-        this.floorNumber = floorNumber
-        this.button.textContent = this.floorNumber.toString();
-        this.button.id = floorNumber.toString();
         this.floorElement.appendChild(this.button);
         this.floorElement.appendChild(this.counterElement);
-        this.floorElement.id = floorNumber.toString();
+        this.floorElement.id = this.floorNumber.toString();
+    }
+
+    initialButton(orderElevator: (floorNumber: number) => void): void {
+        this.button.textContent = this.floorNumber.toString();
+        this.button.id = this.floorNumber.toString();
         this.button.onclick = (): void => {
             if (!this.isInActive) {
                 orderElevator(this.floorNumber);
@@ -32,7 +39,6 @@ export class Floor {
         const timeOut: number = counter % 1;
         setTimeout((): void => {
             let num: number = Math.floor(counter); // Set initial value
-            //  TODO: validate not updated to zero
             this.updateCounter(num);
 
             const interval = setInterval((): void => {
@@ -50,7 +56,7 @@ export class Floor {
     }
 
     updateCounter(num: number): void {
-        this.counterElement.style.background = '#23b20d';
+        this.counterElement.style.background = 'black';
         this.counterElement.textContent = num.toString();
     }
 }

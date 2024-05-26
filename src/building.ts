@@ -3,22 +3,20 @@ import {Settings} from "./settings";
 import {Elevator} from "./elevator";
 
 
-class Building {
+export class Building {
 
     floors: Floor[] = [];
     elevators: Elevator[] = [];
     buildingElement: HTMLDivElement = document.createElement("div");
     floorsElement: HTMLDivElement = document.createElement("div");
     elevatorShaft: HTMLDivElement = document.createElement("div");
+    roof: HTMLImageElement = document.createElement('img');
 
     constructor(numOfFloors: number, numOfElevators: number) {
-        this.buildingElement.className = "building";
-        this.elevatorShaft.className = "elevatorShaft";
-        this.floorsElement.className = "floors";
 
         this.initialElevators(numOfElevators);
         this.initialFloors(numOfFloors);
-        this.appendElements();
+        this.initialElements();
 
     }
 
@@ -32,20 +30,31 @@ class Building {
 
     initialFloors = (numOfFloors: number): void => {
         for (let i: number = 0; i <= numOfFloors; i++) {
-            const floor: Floor = new Floor(i, this.orderElevator);
+            const floor: Floor = new Floor(i, this.callElevator);
             this.floors.push(floor);
             this.floorsElement.appendChild(floor.floorElement);
             if (i != numOfFloors) {
                 this.floorsElement.appendChild(floor.lineElement);
             }
         }
+        this.floorsElement.appendChild(this.roof);
     }
 
-    appendElements = (): void => {
-        const building: HTMLElement | null = document.getElementById("building");
-        if (building) {
-            building.appendChild(this.floorsElement);
-            building.appendChild(this.elevatorShaft);
+    initialElements = (): void => {
+        this.roof.src = "../assets/roof.png";
+
+        this.buildingElement.className = "building";
+        this.elevatorShaft.className = "elevatorShaft";
+        this.floorsElement.className = "floors";
+        this.roof.className = "roof";
+
+
+        this.buildingElement.appendChild(this.floorsElement);
+        this.buildingElement.appendChild(this.elevatorShaft);
+
+        const buildings: HTMLElement | null = document.getElementById("buildings");
+        if (buildings) {
+            buildings.appendChild(this.buildingElement);
         }
     }
 
@@ -60,53 +69,44 @@ class Building {
 
         for (let elevator of this.elevators) {
 
-            const currentMin: number =
+            const currentSpeed: number =
                 Math.abs(elevator.destination - floorNumber) * Settings.timeBetweenFloors
-                + (currentTime > elevator.timer // the elevator is resting
-                    ? 0 : (elevator.timer - currentTime) / Settings.millisecond);
+                + (currentTime > elevator.timer ? 0
+                : (elevator.timer - currentTime) / Settings.millisecond);
 
-            if (currentMin < minTime) {
-                minTime = currentMin;
+            if (currentSpeed < minTime) {
+                minTime = currentSpeed;
                 elevatorID = elevator.id;
             }
         }
         return this.elevators[elevatorID];
     }
 
-    handleImmediateElevatorOrder = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
+    callFreeElevator = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
         elevator.move(floorNumber, this.freeFloor);
         elevator.timer = currentTime + Settings.timeInFloor + (gap * Settings.timeBetweenFloors) * Settings.millisecond;
         this.floors[floorNumber].startCounter(gap * Settings.timeBetweenFloors);
     }
 
-    handleElevatorOrderInAWhile = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
-        setTimeout((): void => { // the elevator is working
+    callBusyElevator = (elevator: Elevator, currentTime: number, floorNumber: number, gap: number): void => {
+        setTimeout((): void => {
             elevator.move(floorNumber, this.freeFloor)
         }, elevator.timer - currentTime)
         this.floors[floorNumber].startCounter(gap * Settings.timeBetweenFloors + (elevator.timer - currentTime) / Settings.millisecond);
         elevator.timer += ((gap * Settings.timeBetweenFloors) * Settings.millisecond + Settings.timeInFloor);
     }
-    orderElevator = (floorNumber: number): void => {
+    callElevator = (floorNumber: number): void => {
 
         let currentTime: number = Date.now();
         const selectedElevator: Elevator = this.chooseElevator(floorNumber, currentTime);
         let gap: number = Math.abs(selectedElevator.destination - floorNumber);
 
-        if (currentTime > selectedElevator.timer) { // the elevator is resting
-            this.handleImmediateElevatorOrder(selectedElevator, currentTime, floorNumber, gap);
+        if (currentTime > selectedElevator.timer) { 
+            this.callFreeElevator(selectedElevator, currentTime, floorNumber, gap);
         } else {
-            this.handleElevatorOrderInAWhile(selectedElevator, currentTime, floorNumber, gap);
+            this.callBusyElevator(selectedElevator, currentTime, floorNumber, gap);
         }
         selectedElevator.destination = floorNumber;
     }
 }
 
-class BuildingFactory {
-    static getBuilding(num_of_floors: number, num_of_elevators: number): Building {
-        return new Building(num_of_floors, num_of_elevators);
-    }
-}
-
-const building1: Building = BuildingFactory.getBuilding(Settings.numOfFloors, Settings.numOfElevators);
-const building2: Building = BuildingFactory.getBuilding(4, 1);
-const building3: Building = BuildingFactory.getBuilding(8, 2);
